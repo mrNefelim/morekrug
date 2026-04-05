@@ -628,6 +628,105 @@
       text-decoration: none;
     }
     footer a:hover { text-decoration: underline; }
+
+    /* Pay modal */
+    .pay-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(13, 31, 31, 0.55);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .pay-modal-overlay.is-open { display: flex; }
+    .pay-modal {
+      width: 100%;
+      max-width: 420px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px 28px 24px;
+      box-shadow: var(--shadow-hover);
+    }
+    .pay-modal h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+      color: var(--text);
+    }
+    .pay-modal .pay-modal-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+      line-height: 1.45;
+    }
+    .pay-modal .pay-modal-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+      line-height: 1.45;
+      padding: 10px 12px;
+      background: rgba(26, 138, 138, 0.08);
+      border-radius: var(--radius);
+    }
+    .pay-modal label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .pay-modal input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-family: inherit;
+    }
+    .pay-modal input[type="email"]:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(26, 138, 138, 0.15);
+    }
+    .pay-modal .pay-modal-error {
+      color: #b00020;
+      font-size: 0.875rem;
+      min-height: 1.25rem;
+      margin-bottom: 12px;
+    }
+    .pay-modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .pay-modal .btn-pay-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      background: var(--gradient);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .pay-modal .btn-pay-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+    .pay-modal .pay-modal-cancel {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--teal);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      font-family: inherit;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -776,7 +875,7 @@
           <li>Импорт из телефона и календаря</li>
           <li>Офлайн-хранение</li>
         </ul>
-        <a href="#appstore" class="btn btn-primary" style="width:100%">Купить</a>
+        <a href="#pricing" class="btn btn-primary js-open-pay-modal" style="width:100%" role="button">Купить</a>
       </div>
       <div class="pricing-card reveal">
         <h3>Круги с ИИ</h3>
@@ -841,6 +940,23 @@
     </div>
   </section>
 
+  <div class="pay-modal-overlay" id="pay-modal" aria-hidden="true">
+    <div class="pay-modal" role="dialog" aria-modal="true" aria-labelledby="pay-modal-title">
+      <h2 id="pay-modal-title">Оплата подписки «Круги»</h2>
+      <p class="pay-modal-sub">199&nbsp;₽ / мес. Укажите email для чека и учёта оплаты.</p>
+      <p class="pay-modal-hint">Используйте <strong>тот же email</strong>, что при регистрации в приложении «Круги» — иначе оплату будет сложно сопоставить с вашим аккаунтом.</p>
+      <form id="pay-modal-form" novalidate>
+        <label for="pay-email">Email</label>
+        <input type="email" id="pay-email" name="email" required maxlength="255" autocomplete="email" placeholder="you@example.com">
+        <div class="pay-modal-error" id="pay-modal-error" aria-live="polite"></div>
+        <div class="pay-modal-actions">
+          <button type="submit" class="btn-pay-submit" id="pay-modal-submit">Перейти к оплате</button>
+          <button type="button" class="pay-modal-cancel js-close-pay-modal">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <footer>
     <div class="hero-cta">
       <a href="#appstore" id="appstore" class="btn btn-appstore">
@@ -888,6 +1004,86 @@
           faqItems.forEach(f => f.classList.remove('open'));
           if (!wasOpen) item.classList.add('open');
         });
+      });
+
+      var payModal = document.getElementById('pay-modal');
+      var payForm = document.getElementById('pay-modal-form');
+      var payEmail = document.getElementById('pay-email');
+      var payError = document.getElementById('pay-modal-error');
+      var paySubmit = document.getElementById('pay-modal-submit');
+
+      function openPayModal(e) {
+        if (e) e.preventDefault();
+        payModal.classList.add('is-open');
+        payModal.setAttribute('aria-hidden', 'false');
+        payError.textContent = '';
+        payEmail.focus();
+      }
+
+      function closePayModal() {
+        payModal.classList.remove('is-open');
+        payModal.setAttribute('aria-hidden', 'true');
+        payError.textContent = '';
+      }
+
+      document.querySelectorAll('.js-open-pay-modal').forEach(function (el) {
+        el.addEventListener('click', openPayModal);
+      });
+      document.querySelectorAll('.js-close-pay-modal').forEach(function (el) {
+        el.addEventListener('click', closePayModal);
+      });
+      payModal.addEventListener('click', function (e) {
+        if (e.target === payModal) closePayModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && payModal.classList.contains('is-open')) closePayModal();
+      });
+
+      payForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        payError.textContent = '';
+        var email = (payEmail.value || '').trim();
+        if (!email) {
+          payError.textContent = 'Введите email.';
+          return;
+        }
+        paySubmit.disabled = true;
+        fetch('pay.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        })
+          .then(function (res) { return res.json().then(function (data) { return { res: res, data: data }; }); })
+          .then(function (_ref) {
+            var res = _ref.res;
+            var data = _ref.data;
+            if (!res.ok) {
+              payError.textContent = (data && data.error) ? data.error : 'Не удалось начать оплату.';
+              return;
+            }
+            if (!data.action || !data.fields) {
+              payError.textContent = 'Некорректный ответ сервера.';
+              return;
+            }
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = data.action;
+            Object.keys(data.fields).forEach(function (key) {
+              var input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = key;
+              input.value = String(data.fields[key]);
+              form.appendChild(input);
+            });
+            document.body.appendChild(form);
+            form.submit();
+          })
+          .catch(function () {
+            payError.textContent = 'Нет связи с сервером. Проверьте подключение.';
+          })
+          .finally(function () {
+            paySubmit.disabled = false;
+          });
       });
     })();
   </script>
