@@ -238,12 +238,16 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
     .hero-cta .btn-appstore:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.5); }
-    .hero-cta .btn-googleplay {
-      background: #3ddc84;
-      color: #000;
-      box-shadow: 0 4px 20px rgba(61,220,132,0.4);
+    .hero-cta .btn-rustore {
+      background: linear-gradient(135deg, #2d1f6b 0%, #5b3fd4 42%, #9d4edd 100%);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(91, 63, 212, 0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.14);
     }
-    .hero-cta .btn-googleplay:hover { box-shadow: 0 6px 28px rgba(61,220,132,0.5); }
+    .hero-cta .btn-rustore:hover {
+      box-shadow: 0 8px 32px rgba(157, 78, 221, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+      filter: brightness(1.06);
+    }
     .btn-store-icon {
       width: 22px;
       height: 22px;
@@ -251,7 +255,7 @@
       flex-shrink: 0;
     }
     .btn-appstore .btn-store-icon { color: #fff; }
-    .btn-googleplay .btn-store-icon { color: #000; }
+    .btn-rustore .btn-store-icon { color: #fff; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
 
     @media (max-width: 768px) {
       .hero-fragments .f1 { left: 25%; top: 22%; }
@@ -648,9 +652,9 @@
           <svg class="btn-store-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.62.03 2.36.26 3.47 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c1.12-1.35 1.87-3.23 1.66-5.09-1.61.07-3.56 1.08-4.72 2.43-1.02 1.18-1.91 3.07-1.67 4.88 1.79.13 3.62-1.01 4.73-2.22z"/></svg>
           Скачать в App Store
         </a>
-        <a href="#googleplay" class="btn btn-googleplay">
-          <svg class="btn-store-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 3v18l18-9L3 3zm2 3.18l12.54 6.36L5 17.82V6.18z"/></svg>
-          Скачать в Google Play
+        <a href="#rustore" class="btn btn-rustore">
+          <svg class="btn-store-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 7V6a5 5 0 0110 0v1h3a1 1 0 011 1v11a3 3 0 01-3 3H6a3 3 0 01-3-3V8a1 1 0 011-1h3zm2 0h6V6a3 3 0 10-6 0v1zm-5 2v11h16V9H4z"/></svg>
+          Скачать в RuStore
         </a>
       </div>
     </div>
@@ -772,7 +776,7 @@
           <li>Импорт из телефона и календаря</li>
           <li>Офлайн-хранение</li>
         </ul>
-        <a href="#appstore" class="btn btn-primary" style="width:100%">Скачать</a>
+        <a href="#appstore" class="btn btn-primary" style="width:100%">Купить</a>
       </div>
       <div class="pricing-card reveal">
         <h3>Круги с ИИ</h3>
@@ -784,7 +788,7 @@
           <li>Анализ контактов по запросу</li>
           <li>Поиск информации в интернете</li>
         </ul>
-        <span class="btn btn-secondary" style="width:100%;opacity:0.7;cursor:default;pointer-events:none">Скоро</span>
+        <span class="btn btn-secondary" style="width:100%;opacity:0.7;cursor:default;pointer-events:none" title="Скоро в продаже">Купить</span>
       </div>
     </div>
   </section>
@@ -801,7 +805,7 @@
       <div class="faq-item reveal">
         <button class="faq-question">На каких платформах?</button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">iOS и Android. Web - в планах.</div>
+          <div class="faq-answer-inner">iOS (App Store) и Android (RuStore). Web — в планах.</div>
         </div>
       </div>
       <div class="faq-item reveal">
@@ -839,13 +843,13 @@
 
   <footer>
     <div class="hero-cta">
-      <a href="#appstore" class="btn btn-appstore">
+      <a href="#appstore" id="appstore" class="btn btn-appstore">
         <svg class="btn-store-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.62.03 2.36.26 3.47 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c1.12-1.35 1.87-3.23 1.66-5.09-1.61.07-3.56 1.08-4.72 2.43-1.02 1.18-1.91 3.07-1.67 4.88 1.79.13 3.62-1.01 4.73-2.22z"/></svg>
         App Store
       </a>
-      <a href="#googleplay" class="btn btn-googleplay">
-        <svg class="btn-store-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
-        Google Play
+      <a href="#rustore" id="rustore" class="btn btn-rustore">
+        <svg class="btn-store-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 7V6a5 5 0 0110 0v1h3a1 1 0 011 1v11a3 3 0 01-3 3H6a3 3 0 01-3-3V8a1 1 0 011-1h3zm2 0h6V6a3 3 0 10-6 0v1zm-5 2v11h16V9H4z"/></svg>
+        RuStore
       </a>
     </div>
     <p><strong>Сорокин Дмитрий Александрович</strong></p>
